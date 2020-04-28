@@ -1,10 +1,11 @@
-const express = require("express"),
-  app = express();
+const express = require("express");
+const app = express();
+require("./services/passport");
 
-app.get("/", (req, res) => {
-  res.send({ hi: "there" });
-});
+require("./routes/authRoutes")(app);
 
 const PORT = process.env.PORT || 5000;
 // process.env.PORT to recieve the Port # from Heroku
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log("Server On...");
+});
