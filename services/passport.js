@@ -27,24 +27,21 @@ passport.use(
       proxy: true,
       // proxy true allows us to use the Heroku proxy when using google oauth in production
     },
-    (accessToken, refreshToken, profile, done) => {
+    async (accessToken, refreshToken, profile, done) => {
       // access, refresh tokens, profile and done are the returned values of OAUTH
-      User.findOne({ googleID: profile.id })
-        // returns a promise
-        .then((existingUser) => {
-          if (existingUser) {
-            // do we already have a record with given profile ID?
-            done(null, existingUser);
-            // done() has two arguments that need to be passed, first is Error Object. Second argument is the user record ie: existingUser in the callbackfunction
-          } else {
-            new User({ googleID: profile.id })
-              // creates a new model instance
-              .save()
-              // saves the new model instance
-              // call .save() to automatically take the model instance and save it to the database
-              .then((user) => done(null, user));
-          }
-        });
+      const existingUser = await User.findOne({ googleID: profile.id });
+      // returns a promise
+      if (existingUser) {
+        // do we already have a record with given profile ID?
+        done(null, existingUser);
+        // done() has two arguments that need to be passed, first is Error Object. Second argument is the user record ie: existingUser in the callbackfunction
+      } else {
+        const user = await new User({ googleID: profile.id }).save();
+        // creates a new model instance
+        // saves the new model instance
+        // call .save() to automatically take the model instance and save it to the database
+        done(null, user);
+      }
     }
   )
 );
