@@ -6,6 +6,7 @@ const keys = require("./config/keys");
 const bodyParser = require("body-parser");
 
 require("./models/User");
+require("./models/Survey");
 require("./services/passport");
 // you must require the mongo SCHEMA before passport.js can access it.
 mongoose.connect(keys.mongoURI);
@@ -28,6 +29,7 @@ app.use(passport.session());
 // the lines from app.use(cookieSession...) to app.use(passport.session()) tells passport.js that we want it to use cookies
 require("./routes/authRoutes")(app);
 require("./routes/billingRoutes")(app);
+require("./routes/surveyRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   // Express will serve up production assets
